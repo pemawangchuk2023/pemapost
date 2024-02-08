@@ -20,7 +20,7 @@ export async function POST(req) {
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return new Response('Error occured -- no svix headers', {
+    return new Response('Error occurred -- no svix headers', {
       status: 400,
     });
   }
@@ -48,8 +48,7 @@ export async function POST(req) {
     });
   }
 
-  // Get the ID and type
-
+  // Handle the event
   const eventType = evt?.type;
 
   if (eventType === 'user.created' || eventType === 'user.updated') {
@@ -65,9 +64,12 @@ export async function POST(req) {
         email_addresses,
         username
       );
-      return new Response('User is created or updated', { status: 200 });
-    } catch (error) {
-      console.log(error);
+
+      return new Response('User is created or updated', {
+        status: 200,
+      });
+    } catch (err) {
+      console.error('Error creating or updating user:', err);
       return new Response('Error occurred', {
         status: 500,
       });
@@ -82,8 +84,11 @@ export async function POST(req) {
       return new Response('User is deleted', {
         status: 200,
       });
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.error('Error deleting user:', err);
+      return new Response('Error occurred', {
+        status: 500,
+      });
     }
   }
 }
