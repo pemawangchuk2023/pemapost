@@ -3,14 +3,15 @@ import '../globals.css';
 import { Inter } from 'next/font/google';
 
 import LeftSideBar from '@components/layout/LeftSideBar';
-import RightSideBar from '@components/layout/RightSideBar';
 import MainContainer from '@components/layout/MainContainer';
+import RightSideBar from '@components/layout/RightSideBar';
 import BottomBar from '@components/layout/BottomBar';
 
 export const metadata = {
   title: 'PemaPost',
-  description: 'PemaPost by Next.js',
+  description: 'Next 14 Social Media App',
 };
+
 const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({ children }) {
