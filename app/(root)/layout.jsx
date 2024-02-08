@@ -4,7 +4,6 @@ import { Inter } from 'next/font/google';
 
 import LeftSideBar from '@components/layout/LeftSideBar';
 import RightSideBar from '@components/layout/RightSideBar';
-import Topbar from '@components/layout/Topbar';
 import MainContainer from '@components/layout/MainContainer';
 import BottomBar from '@components/layout/BottomBar';
 
