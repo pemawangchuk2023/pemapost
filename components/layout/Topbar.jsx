@@ -9,6 +9,8 @@ import Link from 'next/link';
 const Topbar = () => {
   const [search, setSearch] = useState('');
   const router = useRouter();
+
+  const handleSearchChange = () => {};
   return (
     <div className='flex justify-between items-center mt-6'>
       <div className='relative'>
@@ -17,6 +19,7 @@ const Topbar = () => {
           className='search-bar'
           placeholder='Search posts, people, ...'
           value={search}
+          onChange={handleSearchChange}
         />
         <Search
           className='search-icon'
