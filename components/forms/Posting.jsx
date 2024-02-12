@@ -1,7 +1,9 @@
+'use client';
+
 import { AddPhotoAlternateOutlined } from '@mui/icons-material';
-import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
 
 const Posting = ({ post, apiEndpoint }) => {
   const {
@@ -12,10 +14,13 @@ const Posting = ({ post, apiEndpoint }) => {
   } = useForm({
     defaultValues: post,
   });
+
   const router = useRouter();
+
   const handlePublish = async (data) => {
     try {
       const postForm = new FormData();
+
       postForm.append('creatorId', data.creatorId);
       postForm.append('caption', data.caption);
       postForm.append('tag', data.tag);
@@ -33,10 +38,9 @@ const Posting = ({ post, apiEndpoint }) => {
 
       if (response.ok) {
         router.push(`/profile/${data.creatorId}/posts`);
-        return;
       }
-    } catch (error) {
-      console.log('Creating post failed', error.message);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -50,12 +54,13 @@ const Posting = ({ post, apiEndpoint }) => {
         className='flex gap-4 items-center text-light-1 cursor-pointer'
       >
         {watch('postPhoto') ? (
+          // Check profile photo is a string or a file
           typeof watch('postPhoto') === 'string' ? (
             <Image
               src={watch('postPhoto')}
               alt='post'
               width={250}
-              height={250}
+              height={200}
               className='object-cover rounded-lg'
             />
           ) : (
@@ -69,7 +74,7 @@ const Posting = ({ post, apiEndpoint }) => {
           )
         ) : (
           <AddPhotoAlternateOutlined
-            sx={{ fontSize: '100px', color: 'green' }}
+            sx={{ fontSize: '100px', color: 'white' }}
           />
         )}
         <p>Upload a photo</p>
@@ -80,9 +85,9 @@ const Posting = ({ post, apiEndpoint }) => {
             if (
               typeof value === 'null' ||
               (Array.isArray(value) && value.length === 0) ||
-              typeof value === 'undefined'
+              value === 'underfined'
             ) {
-              return 'A Photo is required';
+              return 'A photo is required!';
             }
             return true;
           },
@@ -94,9 +99,10 @@ const Posting = ({ post, apiEndpoint }) => {
       {errors.postPhoto && (
         <p className='text-red-500'>{errors.postPhoto.message}</p>
       )}
+
       <div>
         <label
-          htmlFor=''
+          htmlFor='caption'
           className='text-light-1'
         >
           Caption
@@ -112,31 +118,33 @@ const Posting = ({ post, apiEndpoint }) => {
           })}
           type='text'
           rows={3}
-          placeholder='What is on your mind?'
+          placeholder="What's on your mind?"
           className='w-full input'
           id='caption'
         />
+
         {errors.caption && (
           <p className='text-red-500'>{errors.caption.message}</p>
         )}
       </div>
+
       <div>
         <label
-          htmlFor=''
+          htmlFor='tag'
           className='text-light-1'
         >
-          Tags
+          Tag
         </label>
         <input
-          {...register('tag', {
-            required: 'Tag is required',
-          })}
+          {...register('tag', { required: 'Tag is required' })}
           type='text'
           placeholder='#tag'
           className='w-full input'
         />
+
         {errors.tag && <p className='text-red-500'>{errors.tag.message}</p>}
       </div>
+
       <button
         type='submit'
         className='py-2.5 rounded-lg mt-10 bg-purple-1 hover:bg-pink-1 text-light-1'

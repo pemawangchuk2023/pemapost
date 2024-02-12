@@ -1,13 +1,17 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+
 import { useUser } from '@clerk/nextjs';
-import Posting from '@components/forms/Posting';
 import Loader from '@components/Loader';
+import Posting from '@components/forms/Posting';
+
+import { useEffect, useState } from 'react';
 
 const CreatePost = () => {
   const { user, isLoaded } = useUser();
-  const [userData, setUserData] = useState({});
+
   const [loading, setLoading] = useState(true);
+
+  const [userData, setUserData] = useState({});
 
   const getUser = async () => {
     const response = await fetch(`/api/user/${user.id}`);

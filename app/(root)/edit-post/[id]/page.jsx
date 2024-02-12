@@ -2,6 +2,7 @@
 
 import Loader from '@components/Loader';
 import Posting from '@components/forms/Posting';
+
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -34,6 +35,7 @@ const EditPost = () => {
     tag: postData?.tag,
     postPhoto: postData?.postPhoto,
   };
+
   console.log(postInfo);
   return loading ? (
     <Loader />
