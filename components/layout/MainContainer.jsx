@@ -10,7 +10,7 @@ const MainContainer = ({ children }) => {
 
   const regex = /^\/([^\/]+)/;
   const firstPath = currentPath.match(regex)
-    ? path.match(regex)[0]
+    ? currentPath.match(regex)[0]
     : currentPath;
   // Get title of current path;
   const title = pageTitles.find((page) => page.url === firstPath)?.title || '';

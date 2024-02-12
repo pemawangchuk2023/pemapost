@@ -1,17 +1,40 @@
 'use client';
-import { SignedIn, UserButton, SignOutButton } from '@clerk/nextjs';
-import { Add, Logout, Search } from '@mui/icons-material';
+
+import { useEffect, useState } from 'react';
+import { Add, Person, Search } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import Image from 'next/image';
+import { UserButton, useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 
-const Topbar = () => {
-  const [search, setSearch] = useState('');
-  const router = useRouter();
+import { dark } from '@clerk/themes';
+import Loader from '@components/Loader';
 
-  const handleSearchChange = () => {};
-  return (
+const Topbar = () => {
+  const { user, isLoaded } = useUser();
+
+  const [loading, setLoading] = useState(true);
+
+  const [userData, setUserData] = useState({});
+
+  const getUser = async () => {
+    const response = await fetch(`/api/user/${user.id}`);
+    const data = await response.json();
+    setUserData(data);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (user) {
+      getUser();
+    }
+  }, [user]);
+
+  const router = useRouter();
+  const [search, setSearch] = useState('');
+
+  return !isLoaded || loading ? (
+    <Loader />
+  ) : (
     <div className='flex justify-between items-center mt-6'>
       <div className='relative'>
         <input
@@ -19,39 +42,31 @@ const Topbar = () => {
           className='search-bar'
           placeholder='Search posts, people, ...'
           value={search}
-          onChange={handleSearchChange}
+          onChange={(e) => setSearch(e.target.value)}
         />
         <Search
           className='search-icon'
-          onClick={() => {}}
+          onClick={() => router.push(`/search/posts/${search}`)}
         />
       </div>
+
       <button
         className='create-post-btn'
         onClick={() => router.push('/create-post')}
       >
-        <Add />
-        <p>Create a Post</p>
+        <Add /> <p>Create A Post</p>
       </button>
-      <div className='flex gap-3'>
-        <SignedIn>
-          <SignOutButton>
-            <div className='flex cursor-pointer gap-4 items-center md:hidden'>
-              <Logout sx={{ color: 'white', fontSize: '32px' }} />
-              <p className='text-body-bold text-light-1'>Logout</p>
-            </div>
-          </SignOutButton>
-        </SignedIn>
-      </div>
-      <Link href='/'>
-        <Image
-          src='/assets/pema.png'
-          alt='profile photo'
-          width={50}
-          height={50}
-          className='rounded-full md-hidden'
+
+      <div className='flex gap-4 md:hidden'>
+        <Link href={`/profile/${userData._id}/posts`}>
+          <Person sx={{ fontSize: '35px', color: 'white' }} />
+        </Link>
+
+        <UserButton
+          appearance={{ baseTheme: dark }}
+          afterSignOutUrl='/sign-in'
         />
-      </Link>
+      </div>
     </div>
   );
 };
